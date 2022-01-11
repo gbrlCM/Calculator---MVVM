@@ -23,13 +23,16 @@ final class CalculatorViewModel {
         didPressComma = false
     }
     
-    func executeOperation() {
+    private func executeOperation() {
+        defer { self.lastResult = lastResult.rounded(nOfDecimals: 6) }
+        
         guard
             let firstNumber = firstNumber,
             let secondNumber = secondNumber,
             let operation = operation,
             let delegate = delegate
         else {
+            delegate?.displayResults("" )
             return
         }
         
@@ -115,17 +118,17 @@ final class CalculatorViewModel {
                 let addedDecimal = (Double(value) / pow(10, Double(nOfDecimals+1)))
                 newValue += addedDecimal
                 
-                return newValue
+                return newValue.rounded(nOfDecimals: 6)
             } else {
-                return Double(value)*0.1
+                return (Double(value)*0.1).rounded(nOfDecimals: 6)
             }
         } else {
             if let original = original {
                 var newValue = original*10
                 newValue += Double(value)
-                return newValue
+                return newValue.rounded(nOfDecimals: 6)
             } else {
-                return Double(value)
+                return Double(value).rounded(nOfDecimals: 6)
             }
         }
     }
